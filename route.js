@@ -1,4 +1,5 @@
 var cls = require('continuation-local-storage')
+var bcrypt = require('bcrypt')
 var Promise = require('bluebird')
 var logger = require('./logger')
 
@@ -21,6 +22,29 @@ module.exports = function (req, res, next) {
 	.then(function() {
 		promiseValue = ns.get('testID');
 		console.error("Promise value : " + promiseValue);
+	})
+	.then(function() {
+		var ns = cls.getNamespace('resin-api')
+	        var directValue = ns.get('testID');
+		console.error("Promise 2 value : " + directValue);
+	})
+	.then(function() {
+		return Promise.fromCallback(function(callback) {
+			bcrypt.genSalt(10, function(err, salt) {
+                bcrypt.hash('test', salt, function(err, hash) {
+                        // Store hash in your password DB.
+                        var ns = cls.getNamespace('resin-api')
+                        var directValue = ns.get('testID');
+                        console.error("Bcrypt value : " + directValue);
+			callback();
+                });
+        });
+		})
+	})
+	.then(function() {
+		var ns = cls.getNamespace('resin-api')
+                var directValue = ns.get('testID');
+                console.error("Promise 3 value : " + directValue);
 	})
 
 	logger("Test message for request " + directValue);
