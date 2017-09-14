@@ -18,6 +18,10 @@ module.exports = function (req, res, next) {
 	.then(function(fromPromise) {
 		console.error("promise value: " + fromPromise);
 	})
+	.then(function() {
+		promiseValue = ns.get('testID');
+		console.error("Promise value : " + promiseValue);
+	})
 
 	logger("Test message for request " + directValue);
 
